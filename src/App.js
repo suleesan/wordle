@@ -4,10 +4,12 @@ import Keyboard from "./components/Keyboard";
 import { boardDefault, generateWordSet } from "./Words";
 import React, { useState, createContext, useEffect } from "react";
 import GameOver from "./components/GameOver";
+import Switcher from "./components/Toggle";
 
 export const AppContext = createContext();
 
 function App() {
+  const [theme, setTheme] = useState("dark"); // Initial theme
   const [board, setBoard] = useState(boardDefault);
   const [currAttempt, setCurrAttempt] = useState({ attempt: 0, letter: 0 });
   const [wordSet, setWordSet] = useState(new Set());
@@ -18,7 +20,7 @@ function App() {
     guessedWord: false,
   });
 
-  // we use useEffect to set correct word when we first load website. 
+  // we use useEffect to set correct word when we first load website.
   useEffect(() => {
     generateWordSet().then((words) => {
       setWordSet(words.wordSet);
@@ -71,31 +73,34 @@ function App() {
   };
 
   return (
-    <div className="App">
-      <nav>
-        <h1>Wordle</h1>
-      </nav>
-      <AppContext.Provider
-        value={{
-          board,
-          setBoard,
-          currAttempt,
-          setCurrAttempt,
-          correctWord,
-          onSelectLetter,
-          onDelete,
-          onEnter,
-          setDisabledLetters,
-          disabledLetters,
-          gameOver,
-        }}
-      >
-        <div className="game">
-          {/* display game over if condition met, else display keyboard */}
-          <Board />
-          {gameOver.gameOver ? <GameOver /> : <Keyboard />}
-        </div>
-      </AppContext.Provider>
+    <div className="">
+      <div className="text-center w-screen h-screen bg-white dark:bg-black">
+        <nav className="flex items-center justify-between h-16 w-full border-b-2 border-grey p-4">
+          <h1 className="text-3xl sm:text-5xl mx-auto dark:text-white">Wordle</h1>
+          <Switcher />
+        </nav>
+
+        <AppContext.Provider
+          value={{
+            board,
+            setBoard,
+            currAttempt,
+            setCurrAttempt,
+            correctWord,
+            onSelectLetter,
+            onDelete,
+            onEnter,
+            setDisabledLetters,
+            disabledLetters,
+            gameOver,
+          }}
+        >
+          <div className="game w-screen flex items-center pt-30 flex-col">
+            <Board />
+            {gameOver.gameOver ? <GameOver /> : <Keyboard />}
+          </div>
+        </AppContext.Provider>
+      </div>
     </div>
   );
 }
