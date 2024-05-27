@@ -2,18 +2,43 @@ import React, { useContext, useEffect } from "react";
 import { AppContext } from "../App";
 
 function Letter({ letterPos, attemptVal }) {
-  const { board, setDisabledLetters, currAttempt, correctWord } = useContext(AppContext);
+  const { board, setDisabledLetters, currAttempt, correctWord } =
+    useContext(AppContext);
 
   const letter = board[attemptVal][letterPos];
+  const correctWordArray = correctWord.toUpperCase().split("");
+  const guessArray = board[attemptVal];
 
-  // Determine the state of the letter (correct, almost, error)
-  const correct = correctWord.toUpperCase()[letterPos] === letter;
-  const almost = !correct && letter !== "" && correctWord.toUpperCase().includes(letter);
-  const letterState = currAttempt.attempt > attemptVal && (correct ? "correct" : almost ? "almost" : "error");
+  // count letters in correct word
+  const correctWordLetterCount = correctWordArray.reduce((count, char) => {
+    count[char] = (count[char] || 0) + 1;
+    return count;
+  }, {});
 
-  // Disable the letter if neither correct nor almost
+  // determine the state of each letter
+  const letterStates = guessArray.map((char, index) => {
+    if (correctWordArray[index] === char) {
+      correctWordLetterCount[char]--;
+      return "correct";
+    }
+    return "";
+  });
+
+  // second pass to mark almost correct letters
+  guessArray.forEach((char, index) => {
+    if (letterStates[index] === "" && correctWordLetterCount[char] > 0) {
+      letterStates[index] = "almost";
+      correctWordLetterCount[char]--;
+    } else if (letterStates[index] === "") {
+      letterStates[index] = "error";
+    }
+  });
+
+  const letterState =
+    currAttempt.attempt > attemptVal ? letterStates[letterPos] : "";
+
   useEffect(() => {
-    if (letter !== "" && !correct && !almost) {
+    if (letter !== "" && letterState === "error") {
       setDisabledLetters((prev) => [...prev, letter]);
     }
   }, [currAttempt.attempt]);
@@ -21,10 +46,13 @@ function Letter({ letterPos, attemptVal }) {
   return (
     <div
       className={`flex-33 h-16 w-16 text-xl dark:text-white font-extrabold border-2 border-gray-300 dark:border-slate-200 m-1 p-5 ${
-        letterState === "correct" ? "bg-[#6ca965]" :
-        letterState === "almost" ? "bg-[#c8b653]" :
-        letterState === "error" ? "bg-[#787c7f]" :
-        ""
+        letterState === "correct"
+          ? "bg-[#6ca965]"
+          : letterState === "almost"
+          ? "bg-[#c8b653]"
+          : letterState === "error"
+          ? "bg-[#787c7f]"
+          : ""
       }`}
     >
       {letter}

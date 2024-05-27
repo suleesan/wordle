@@ -1,5 +1,5 @@
-import wordBank from "./wordbank.txt"
-import guessBank from "./guesses.txt"
+import wordBank from "./wordbank.txt";
+import guessBank from "./guesses.txt";
 
 export const boardDefault = [
   ["", "", "", "", ""],
