@@ -1,6 +1,5 @@
-import React from 'react';
-import { boardDefault } from '../Words';
-import Letter from './Letter';
+import React from "react";
+import Letter from "./Letter";
 
 function Board() {
   const attempts = [0, 1, 2, 3, 4, 5];

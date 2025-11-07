@@ -24,7 +24,7 @@ function Letter({ letterPos, attemptVal }) {
     return "";
   });
 
-  // second pass to mark almost correct letters
+  // second pass to mark almost correct letters and error letters
   guessArray.forEach((char, index) => {
     if (letterStates[index] === "" && correctWordLetterCount[char] > 0) {
       letterStates[index] = "almost";

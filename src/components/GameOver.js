@@ -6,23 +6,11 @@ function RefreshButton() {
     window.location.reload();
   };
 
-  return (
-    <button onClick={handleRefresh}>
-      Play Again
-    </button>
-  );
+  return <button onClick={handleRefresh}>Play Again</button>;
 }
 
 function GameOver() {
-  const {
-    board,
-    setBoard,
-    currAttempt,
-    gameOver,
-    onSelectLetter,
-    correctWord,
-    onDelete,
-  } = useContext(AppContext);
+  const { currAttempt, gameOver, correctWord } = useContext(AppContext);
   return (
     <div className="gameOver flex flex-col items-center text-black dark:text-white">
       <h3 className="mt-4 text-xl">
@@ -34,7 +22,9 @@ function GameOver() {
         Correct Word: <span className="font-bold">{correctWord}</span>
       </h1>
       {gameOver.guessedWord && (
-        <h3 className="mt-4 text-xl">You guessed in {currAttempt.attempt} attempts</h3>
+        <h3 className="mt-4 text-xl">
+          You guessed in {currAttempt.attempt} attempts
+        </h3>
       )}
       <div className="mt-4 border dark:border-white border-black rounded-md hover:bg-gray-200 dark:hover:bg-gray-400 p-3 w-1/2">
         <RefreshButton />
